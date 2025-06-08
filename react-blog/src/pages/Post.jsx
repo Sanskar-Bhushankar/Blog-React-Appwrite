@@ -59,6 +59,11 @@ export default function Post() {
                 </div>
                 <div className="w-full mb-6">
                     <h1 className="text-3xl sm:text-5xl font-extrabold text-black- mb-6 text-center leading-tight">{post.title}</h1>
+                    {post.authorName && (
+                        <p className="text-lg text-gray-700 text-center mt-2">
+                            By <span className="font-semibold text-blue-600">{post.authorName}</span>
+                        </p>
+                    )}
                 </div>
                 <div className=" text-xl max-w-2xl text-center mx-auto text-black-300">
                     {parse(post.content)}

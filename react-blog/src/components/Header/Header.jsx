@@ -110,7 +110,7 @@ const Header = () => {
   ]
 
   return (
-    <header className="py-4 shadow-md bg-gradient-to-r from-blue-600 to-indigo-600">
+    <header className="py-4 shadow-md bg-gradient-to-r from-blue-600 to-indigo-400">
       <Container>
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
