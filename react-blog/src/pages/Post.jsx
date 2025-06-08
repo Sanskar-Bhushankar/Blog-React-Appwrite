@@ -35,32 +35,32 @@ export default function Post() {
     return post ? (
         <div className="py-8">
             <Container>
-                <div className="w-full flex justify-center mb-4 relative border rounded-xl p-2">
+                <div className="w-full flex justify-center mb-6 relative rounded-xl p-0">
                     {post.featuredimage && (
                         <img
                             src={appwriteService.getFileView(post.featuredimage)}
                             alt={post.title}
-                            className="rounded-xl"
+                            className="w-1/2 h-1/2 object-cover rounded-lg shadow-xl"
                         />
                     )}
                     
                     {isAuthor && (
-                        <div className="absolute right-6 top-6">
+                        <div className="absolute right-6 top-6 flex space-x-3 z-10">
                             <Link to={`/edit-post/${post.$id}`}>
-                                <Button bgColor="bg-green-500" className="mr-3">
+                                <Button bgColor="bg-green-600 hover:bg-green-700" className="rounded-lg px-4 py-2 text-white font-semibold shadow-md transition-colors duration-200">
                                     Edit
                                 </Button>
                             </Link>
-                            <Button bgColor="bg-red-500" onClick={deletePost}>
+                            <Button bgColor="bg-red-600 hover:bg-red-700" className="rounded-lg px-4 py-2 text-white font-semibold shadow-md transition-colors duration-200" onClick={deletePost}>
                                 Delete
                             </Button>
                         </div>
                     )}
                 </div>
                 <div className="w-full mb-6">
-                    <h1 className="text-2xl font-bold">{post.title}</h1>
+                    <h1 className="text-3xl sm:text-5xl font-extrabold text-black- mb-6 text-center leading-tight">{post.title}</h1>
                 </div>
-                <div className="browser-css">
+                <div className=" text-xl max-w-2xl text-center mx-auto text-black-300">
                     {parse(post.content)}
                     </div>
             </Container>
