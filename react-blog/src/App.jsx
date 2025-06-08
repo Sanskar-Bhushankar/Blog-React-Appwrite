@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import authService from '../appwrite/auth'
-import Header from '../src/components/Header/Header'
-import Footer from '../src/components/Footer/Footer'
+import { login, logout } from './store/authSlice'
+import { Footer, Header } from './components/index'
+import { Outlet } from 'react-router-dom'
 
 function App() {
-  const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const dispatch = useDispatch()
 
@@ -31,7 +29,7 @@ function App() {
       <div className='w-full block'>
         <Header/>
         <main>
-          TODO{/* <Outlet/> */}
+          TODO<Outlet/>
         </main>
         <Footer/>
       </div>
