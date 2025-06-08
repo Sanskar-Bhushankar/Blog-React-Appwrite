@@ -1,8 +1,13 @@
 import React from 'react'
 
+
 const Logo = () => {
   return (
-    <div>logo</div>
+    <div>
+      <img src="./src/assets/blog-icon.png"
+      alt="logo"
+      className='w-10' />
+    </div>
   )
 }
 
