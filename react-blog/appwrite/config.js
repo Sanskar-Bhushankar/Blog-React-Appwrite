@@ -1,6 +1,7 @@
 import conf from '../src/conf/conf.js'; // Adjust the path as necessary
 import {Client, ID, Databases, Storage, Query} from 'appwrite'; 
 
+
 export class Service{
     client =new Client();
     Databases;
@@ -8,13 +9,13 @@ export class Service{
     constructor() {
         this.client
             .setEndpoint(conf.appwriteUrl)
-            .setProject(conf.appwrtieProjectId);
+            .setProject(conf.appwriteProjectId);
 
         this.Databases = new Databases(this.client);
         this.bucket = new Storage(this.client);
     }
 
-    async createPost({title,slug,content,featuredImage,status,userId}){
+    async createPost({title,slug,content,featuredimage,status,userId}){
         try{
             return await this.Databases.createDocument(
                 conf.appwriteDatabaseId, // Database ID
@@ -23,7 +24,7 @@ export class Service{
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredimage,
                     status,
                     userId
                 },
@@ -34,7 +35,7 @@ export class Service{
         }
     }
 
-  async updatePost(slug,{title,content,featuredImage,status}){
+  async updatePost(slug,{title,content,featuredimage,status}){
         try{
             return await this.Databases.updateDocument(
                 conf.appwriteDatabaseId, // Database ID
@@ -43,7 +44,7 @@ export class Service{
                 {
                     title,
                     content,
-                    featuredImage,
+                    featuredimage,
                     status
                 },
             );
@@ -117,8 +118,8 @@ export class Service{
   }
 
   // in the documentation the get file preview dosent return any promise so we dont need async await in this so i didnt apply here
-  getFilePreview(fileId){
-    return this.bucket.getFilePreview(
+  getFileView(fileId){
+    return this.bucket.getFileView(
         conf.appwriteBucketId, // Bucket ID
         fileId // File ID to get preview
     );
