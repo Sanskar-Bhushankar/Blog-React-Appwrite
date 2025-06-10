@@ -1,9 +1,11 @@
 import React from 'react'
-import {Editor } from '@tinymce/tinymce-react';
+import MDEditor from '@uiw/react-md-editor';
+import MarkdownIt from 'markdown-it';
+import '@uiw/react-md-editor/markdown-editor.css'; // Correct import
+import '@uiw/react-markdown-preview/markdown.css'; // Correct import for preview styles
 import {Controller } from 'react-hook-form';
-import conf from '../conf/conf'
 
-
+const mdParser = new MarkdownIt();
 
 export default function RTE({name, control, label, defaultValue =""}) {
   return (
@@ -13,41 +15,12 @@ export default function RTE({name, control, label, defaultValue =""}) {
     <Controller
     name={name || "content"}
     control={control}
-    render={({field: {onChange}}) => (
-        <Editor
-        apiKey={conf.tinyMce}
-        initialValue={defaultValue}
-        init={{
-            initialValue: defaultValue,
-            height: 500,
-            menubar: true,
-            plugins: [
-                "image",
-                "advlist",
-                "autolink",
-                "lists",
-                "link",
-                "image",
-                "charmap",
-                "preview",
-                "anchor",
-                "searchreplace",
-                "visualblocks",
-                "code",
-                "fullscreen",
-                "insertdatetime",
-                "media",
-                "table",
-                "code",
-                "help",
-                "wordcount",
-                "anchor",
-            ],
-            toolbar:
-            "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
-            content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
-        }}
-        onEditorChange={onChange}
+    render={({field: {onChange, value}}) => (
+        <MDEditor
+            value={value}
+            onChange={(val) => onChange(val || '')}
+            height={500}
+            data-color-mode="light" // Ensure light mode for consistency with prose
         />
     )}
     />

@@ -10,13 +10,27 @@ function EditPost() {
 
     useEffect(() => {
         if (slug) {
-            appwriteService.getPost(slug).then((post) => {
+            appwriteService.getPost(slug).then(async (post) => {
                 if (post) {
-                    setPosts(post)
+                    if (post.content) {
+                        const fileUrl = appwriteService.getFileView(post.content);
+                        try {
+                            const response = await fetch(fileUrl);
+                            const markdownText = await response.text();
+                            setPosts({...post, content: markdownText});
+                        } catch (error) {
+                            console.error('Error fetching or converting Markdown for editing:', error);
+                            setPosts(post);
+                        }
+                    } else {
+                        setPosts(post);
+                    }
+                } else {
+                    navigate('/');
                 }
-            })
+            });
         } else {
-            navigate('/')
+            navigate('/');
         }
     }, [slug, navigate])
   return post ? (

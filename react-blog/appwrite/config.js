@@ -1,11 +1,11 @@
 import conf from '../src/conf/conf.js'; // Adjust the path as necessary
 import {Client, ID, Databases, Storage, Query} from 'appwrite'; 
 
-
 export class Service{
     client =new Client();
     Databases;
     bucket;
+
     constructor() {
         this.client
             .setEndpoint(conf.appwriteUrl)
@@ -17,13 +17,27 @@ export class Service{
 
     async createPost({title,slug,content,featuredimage,status,userId,authorName}){
         try{
+            // Directly use Markdown content
+            const markdownContent = content;
+
+            // Create a Blob or File object from the Markdown string
+            const markdownFile = new File([markdownContent], `${slug}.md`, { type: 'text/markdown' });
+
+            // Upload the Markdown file to Appwrite storage
+            const uploadedFile = await this.uploadFile(markdownFile);
+            
+            if (!uploadedFile) {
+                throw new Error('Failed to upload Markdown file.');
+            }
+
+            // Store the file ID in the database\'s content field
             return await this.Databases.createDocument(
                 conf.appwriteDatabaseId, // Database ID
                 conf.appwriteCollectionId, // Collection ID
                 slug, 
                 {
                     title,
-                    content,
+                    content: uploadedFile.$id, // Store file ID instead of content
                     featuredimage,
                     status,
                     userId,
@@ -40,13 +54,33 @@ export class Service{
 
   async updatePost(slug,{title,content,featuredimage,status,authorName}){
         try{
+            // First, get the existing post to retrieve the old content file ID
+            const oldPost = await this.getPost(slug);
+            if (oldPost && oldPost.content) {
+                // Delete the old Markdown file
+                await this.deleteFile(oldPost.content);
+            }
+
+            // Directly use Markdown content
+            const markdownContent = content;
+
+            // Create a Blob or File object from the Markdown string
+            const markdownFile = new File([markdownContent], `${slug}.md`, { type: 'text/markdown' });
+
+            // Upload the new Markdown file
+            const uploadedFile = await this.uploadFile(markdownFile);
+
+            if (!uploadedFile) {
+                throw new Error('Failed to upload new Markdown file.');
+            }
+            
             return await this.Databases.updateDocument(
                 conf.appwriteDatabaseId, // Database ID
                 conf.appwriteCollectionId, // Collection ID
                 slug, 
                 {
                     title,
-                    content,
+                    content: uploadedFile.$id, // Store new file ID
                     featuredimage,
                     status,
                     authorName
