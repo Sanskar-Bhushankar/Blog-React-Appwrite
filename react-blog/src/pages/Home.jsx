@@ -2,14 +2,28 @@ import React, {useEffect, useState} from 'react'
 import appwriteService from "../../appwrite/config";
 import {Container, PostCard} from '../components'
 import LandingPage from './LandingPage'
+import Slider from '../components/Slider'
 
 function Home() {
     const [posts, setPosts] = useState([])
+    const [sliderContent, setSliderContent] = useState([])
 
     useEffect(() => {
-        appwriteService.getPosts().then((posts) => {
-            if (posts) {
-                setPosts(posts.documents)
+        appwriteService.getPosts().then((fetchedPosts) => {
+            if (fetchedPosts) {
+                setPosts(fetchedPosts.documents)
+
+                const latestPosts = fetchedPosts.documents
+                    .sort((a, b) => new Date(b.$createdAt) - new Date(a.$createdAt))
+                    .slice(0, 3);
+
+                const preparedSliderData = latestPosts.map(post => ({
+                    id: post.$id,
+                    title: post.title,
+                    imageUrl: post.featuredimage ? appwriteService.getFileView(post.featuredimage) : null,
+                    slug: `/post/${post.$id}`
+                }));
+                setSliderContent(preparedSliderData);
             }
         })
     }, [])
@@ -34,6 +48,7 @@ function Home() {
     return (
         <div className='w-full'>
             <Container>
+                {sliderContent.length > 0 && <Slider slides={sliderContent} />}
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
                     {posts.map((post) => (
                         <div key={post.$id} className='p-3'>
